@@ -9,6 +9,10 @@ namespace HouseInventory
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            var configuration = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json", optional: false)
+                .Build();
+
             // Add services to the container.
 
             builder.Services.AddControllers();
@@ -18,6 +22,7 @@ namespace HouseInventory
 
             builder.Services.AddAuthentication();
             builder.Services.AddCustomIdentityConfiguration();
+            builder.Services.AddDatabaseConnection(configuration);
 
             var app = builder.Build();
 

@@ -1,6 +1,7 @@
 ﻿using HouseInventory.Data.Context;
 using HouseInventory.Data.Entities;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace HouseInventory.Extensions
 {
@@ -19,6 +20,14 @@ namespace HouseInventory.Extensions
             })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
+        }
+
+        public static void AddDatabaseConnection(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddDbContext<ApplicationDbContext>(options =>
+            {
+                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+            });
         }
     }
 }
