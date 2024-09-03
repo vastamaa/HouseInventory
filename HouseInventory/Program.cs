@@ -1,4 +1,6 @@
 
+using HouseInventory.Extensions;
+
 namespace HouseInventory
 {
     public class Program
@@ -14,6 +16,9 @@ namespace HouseInventory
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            builder.Services.AddAuthentication();
+            builder.Services.AddCustomIdentityConfiguration();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -25,6 +30,7 @@ namespace HouseInventory
 
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
 
