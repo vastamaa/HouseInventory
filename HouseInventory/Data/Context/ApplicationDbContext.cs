@@ -1,4 +1,5 @@
-﻿using HouseInventory.Data.Entities;
+﻿using HouseInventory.Data.Configurations;
+using HouseInventory.Data.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,6 +12,8 @@ namespace HouseInventory.Data.Context
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            builder.ApplyConfiguration(new RoleConfigurations());
         }
     }
 }
