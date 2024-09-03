@@ -1,6 +1,6 @@
 @HouseInventory_HostAddress = http://localhost:5051
 
-GET {{HouseInventory_HostAddress}}/weatherforecast/
-Accept: application/json
+# GET {{HouseInventory_HostAddress}}/weatherforecast/
+# Accept: application/json
 
-###
+# ###
