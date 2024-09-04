@@ -1,5 +1,6 @@
 ﻿using HouseInventory.Data.Context;
 using HouseInventory.Data.Entities;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -28,6 +29,11 @@ namespace HouseInventory.Extensions
             {
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
             });
+        }
+
+        public static void AddCustomServices(this IServiceCollection services)
+        {
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
         }
     }
 }
