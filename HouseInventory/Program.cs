@@ -14,15 +14,18 @@ namespace HouseInventory
                 .Build();
 
             // Add services to the container.
+            builder.Services.AddAuthentication();
+            builder.Services.AddCustomIdentityConfiguration();
+            builder.Services.AddDatabaseConnection(configuration);
+            builder.Services.AddAutoMapper(typeof(Program));
+            builder.Services.AddCustomServices();
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            builder.Services.AddAuthentication();
-            builder.Services.AddCustomIdentityConfiguration();
-            builder.Services.AddDatabaseConnection(configuration);
+            
 
             var app = builder.Build();
 
