@@ -5,6 +5,8 @@ namespace HouseInventory.Services.Interfaces
 {
     public interface IAuthenticationService
     {
-        Task<IdentityResult> RegisterUser(UserForRegistrationDto userRegistration);
+        Task<IdentityResult> RegisterUserAsync(UserRegistrationDto userRegistration);
+        Task<SignInResult> LoginUserAsync(UserLoginDto userLogin);
+        Task LogoutUserAsync();
     }
 }

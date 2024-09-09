@@ -6,9 +6,9 @@ namespace HouseInventory.Mappings
 {
     public class UserForRegistrationProfile : Profile
     {
-        protected UserForRegistrationProfile()
+        public UserForRegistrationProfile()
         {
-            CreateMap<UserForRegistrationDto, User>();
+            CreateMap<UserRegistrationDto, User>();
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using HouseInventory.Data.Context;
 using HouseInventory.Data.Entities;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -33,7 +32,7 @@ namespace HouseInventory.Extensions
 
         public static void AddCustomServices(this IServiceCollection services)
         {
-            services.AddScoped<IAuthenticationService, AuthenticationService>();
+            services.AddScoped<Services.Interfaces.IAuthenticationService, Services.AuthenticationService>();
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using HouseInventory.Models.DTOs;
 using HouseInventory.Services.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,10 +16,10 @@ namespace HouseInventory.Controllers
             _authenticationService = authenticationService;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> RegisterUser([FromBody] UserForRegistrationDto userForRegistration)
+        [HttpPost(nameof(RegisterUser))]
+        public async Task<IActionResult> RegisterUser([FromBody] UserRegistrationDto userForRegistration)
         {
-            var result = await _authenticationService.RegisterUser(userForRegistration);
+            var result = await _authenticationService.RegisterUserAsync(userForRegistration);
 
             if (!result.Succeeded)
             {
@@ -32,6 +31,22 @@ namespace HouseInventory.Controllers
             }
 
             return Created();
+        }
+
+        [HttpPost(nameof(LoginUser))]
+        public async Task<IActionResult> LoginUser([FromBody] UserLoginDto userForLogin)
+        {
+            var result = await _authenticationService.LoginUserAsync(userForLogin);
+
+            return result.Succeeded ? Redirect("https://www.google.com") : BadRequest(ModelState);
+        }
+
+        [HttpPost(nameof(LogoutUser))]
+        public async Task<IActionResult> LogoutUser()
+        {
+            await _authenticationService.LoginUserAsync();
+
+            return Redirect("https://www.google.com");
         }
     }
 }
