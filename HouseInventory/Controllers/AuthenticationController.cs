@@ -41,5 +41,13 @@ namespace HouseInventory.Controllers
 
             return result.Succeeded ? Redirect("https://www.google.com") : BadRequest(ModelState);
         }
+
+        [HttpPost(nameof(LogoutUser))]
+        public async Task<IActionResult> LogoutUser()
+        {
+            await _authenticationService.LoginUserAsync();
+
+            return Redirect("https://www.google.com");
+        }
     }
 }

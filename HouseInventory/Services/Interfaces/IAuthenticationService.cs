@@ -7,5 +7,6 @@ namespace HouseInventory.Services.Interfaces
     {
         Task<IdentityResult> RegisterUserAsync(UserRegistrationDto userRegistration);
         Task<SignInResult> LoginUserAsync(UserLoginDto userLogin);
+        Task LogoutUserAsync();
     }
 }
