@@ -1,10 +1,7 @@
 ﻿using AutoMapper;
 using HouseInventory.Data.Entities;
 using HouseInventory.Models.DTOs;
-using HouseInventory.Services.Interfaces;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
-using System.Security.Claims;
 
 namespace HouseInventory.Services
 {

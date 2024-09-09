@@ -1,11 +1,7 @@
 ﻿using HouseInventory.Data.Context;
 using HouseInventory.Data.Entities;
-using HouseInventory.Services;
-using HouseInventory.Services.Interfaces;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace HouseInventory.Extensions
 {

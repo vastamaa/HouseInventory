@@ -1,6 +1,5 @@
 ﻿using HouseInventory.Models.DTOs;
 using HouseInventory.Services.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
