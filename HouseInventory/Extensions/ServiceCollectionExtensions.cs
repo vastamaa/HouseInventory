@@ -1,5 +1,7 @@
 ﻿using HouseInventory.Data.Context;
 using HouseInventory.Data.Entities;
+using HouseInventory.Services;
+using HouseInventory.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics.CodeAnalysis;
@@ -57,6 +59,11 @@ namespace HouseInventory.Extensions
             {
 
             });
+        }
+
+        public static void ConfigureLoggerService(this IServiceCollection services)
+        {
+            services.AddSingleton<ILoggerManager, LoggerManager>();
         }
     }
 }

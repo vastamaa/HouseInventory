@@ -1,11 +1,8 @@
 
 using HouseInventory.Extensions;
 using Microsoft.AspNetCore.HttpOverrides;
-<<<<<<< Updated upstream
-=======
 using NLog;
 using System.Diagnostics.CodeAnalysis;
->>>>>>> Stashed changes
 
 namespace HouseInventory
 {
@@ -15,6 +12,9 @@ namespace HouseInventory
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            // Setting up the configuration for the logger service.
+            LogManager.Setup().LoadConfigurationFromFile(string.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
 
             var configuration = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", optional: false)
@@ -29,6 +29,8 @@ namespace HouseInventory
 
             builder.Services.AddCorsConfiguration();
             builder.Services.ConfigureIISIntegration();
+
+            builder.Services.ConfigureLoggerService();
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

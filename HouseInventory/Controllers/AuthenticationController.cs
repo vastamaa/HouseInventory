@@ -10,10 +10,12 @@ namespace HouseInventory.Controllers
     public class AuthenticationController : ControllerBase
     {
         private readonly IAuthenticationService _authenticationService;
+        private readonly ILoggerManager _logger;
 
-        public AuthenticationController(IAuthenticationService authenticationService)
+        public AuthenticationController(IAuthenticationService authenticationService, ILoggerManager logger)
         {
             _authenticationService = authenticationService;
+            _logger = logger;
         }
 
         [HttpPost(nameof(RegisterUser))]
@@ -30,6 +32,8 @@ namespace HouseInventory.Controllers
                 return BadRequest(ModelState);
             }
 
+            _logger.LogInfo("User successfully created!");
+
             return Created();
         }
 
@@ -45,6 +49,8 @@ namespace HouseInventory.Controllers
         public async Task<IActionResult> LogoutUser()
         {
             await _authenticationService.LogoutUserAsync();
+
+            _logger.LogInfo("User logged out successfully!");
 
             return Ok("Logged out!");
         }

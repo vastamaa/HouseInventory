@@ -1,4 +1,4 @@
-﻿using HouseInventory.Services.Interfaces;
+using HouseInventory.Services.Interfaces;
 using NLog;
 using System.Diagnostics.CodeAnalysis;
 using ILogger = NLog.ILogger;
