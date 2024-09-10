@@ -44,7 +44,7 @@ namespace HouseInventory.Controllers
         [HttpPost(nameof(LogoutUser))]
         public async Task<IActionResult> LogoutUser()
         {
-            await _authenticationService.LoginUserAsync();
+            await _authenticationService.LogoutUserAsync();
 
             return Redirect("https://www.google.com");
         }
