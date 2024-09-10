@@ -34,5 +34,27 @@ namespace HouseInventory.Extensions
         {
             services.AddScoped<Services.Interfaces.IAuthenticationService, Services.AuthenticationService>();
         }
+
+        public static void AddCorsConfiguration(this IServiceCollection services) 
+        {
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy", builder =>
+                {
+                    builder
+                    .AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+                });
+            });
+        }
+
+        public static void ConfigureIISIntegration(this IServiceCollection services)
+        {
+            services.Configure<IISOptions>(options =>
+            {
+
+            });
+        }
     }
 }

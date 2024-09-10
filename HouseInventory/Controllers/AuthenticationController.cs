@@ -38,7 +38,7 @@ namespace HouseInventory.Controllers
         {
             var result = await _authenticationService.LoginUserAsync(userForLogin);
 
-            return result.Succeeded ? Redirect("https://www.google.com") : BadRequest(ModelState);
+            return result.Succeeded ? Ok("Logged in!") : BadRequest(ModelState);
         }
 
         [HttpPost(nameof(LogoutUser))]
@@ -46,7 +46,7 @@ namespace HouseInventory.Controllers
         {
             await _authenticationService.LoginUserAsync();
 
-            return Redirect("https://www.google.com");
+            return Ok("Logged out!");
         }
     }
 }
