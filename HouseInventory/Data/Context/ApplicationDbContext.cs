@@ -2,9 +2,11 @@
 using HouseInventory.Data.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics.CodeAnalysis;
 
 namespace HouseInventory.Data.Context
 {
+    [ExcludeFromCodeCoverage]
     public class ApplicationDbContext : IdentityDbContext<User>
     {
         public ApplicationDbContext(DbContextOptions options) : base(options) { }

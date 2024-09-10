@@ -2,9 +2,11 @@
 using HouseInventory.Extensions;
 using Microsoft.AspNetCore.HttpOverrides;
 using NLog;
+using System.Diagnostics.CodeAnalysis;
 
 namespace HouseInventory
 {
+    [ExcludeFromCodeCoverage]
     public class Program
     {
         public static void Main(string[] args)

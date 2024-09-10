@@ -1,6 +1,6 @@
 ﻿namespace HouseInventory.Models
 {
-    public enum RolesEnum
+    public enum Roles
     {
         Administrator,
         Member
