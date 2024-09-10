@@ -1,9 +1,15 @@
 
 using HouseInventory.Extensions;
 using Microsoft.AspNetCore.HttpOverrides;
+<<<<<<< Updated upstream
+=======
+using NLog;
+using System.Diagnostics.CodeAnalysis;
+>>>>>>> Stashed changes
 
 namespace HouseInventory
 {
+    [ExcludeFromCodeCoverage]
     public class Program
     {
         public static void Main(string[] args)
