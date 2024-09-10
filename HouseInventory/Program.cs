@@ -1,5 +1,6 @@
 
 using HouseInventory.Extensions;
+using Microsoft.AspNetCore.HttpOverrides;
 
 namespace HouseInventory
 {
@@ -20,6 +21,9 @@ namespace HouseInventory
             builder.Services.AddAutoMapper(typeof(Program));
             builder.Services.AddCustomServices();
 
+            builder.Services.AddCorsConfiguration();
+            builder.Services.ConfigureIISIntegration();
+
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
@@ -35,8 +39,19 @@ namespace HouseInventory
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+            else 
+            {
+                app.UseHsts();
+            }
 
             app.UseHttpsRedirection();
+            app.UseStaticFiles();
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.All
+            });
+
+            app.UseCors("CorsPolicy");
 
             app.UseAuthentication();
             app.UseAuthorization();
