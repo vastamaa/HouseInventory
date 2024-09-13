@@ -3,19 +3,27 @@ import './Login.css'
 import Input from '../../components/input/Input';
 import Title from '../../components/title/Title';
 import Button from '../../components/button/Button';
+import { useHttpRequestService } from '../../contexts/HttpRequestServiceContext';
 
 interface IUserLogin {
-  emailAddress: string;
+  email: string;
   password: string;
+  rememberMe?: boolean | null;
 }
 
 const Login = (): JSX.Element => {
-  const [userLogin, setUserLogin] = useState<IUserLogin>({ emailAddress: '', password: '' });
+  const [userLogin, setUserLogin] = useState<IUserLogin>({ email: '', password: '' });
+  const httpRequestService = useHttpRequestService();
 
-  const handleButtonClick = (event: MouseEvent<HTMLInputElement>) => {
-    // You'll update this function later...
-    // Send data to the api.
+  const handleLogin = async (event: MouseEvent<HTMLInputElement>) => {
     event.preventDefault();
+    try {
+      const response = await httpRequestService.PostResourceAsync<IUserLogin>('/api/Authentication/LoginUser', userLogin);
+      console.log('Response value:', response);
+    }
+    catch (error) {
+      console.log('Error fetching data:', error);
+    }
   }
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>): void => {
@@ -31,11 +39,11 @@ const Login = (): JSX.Element => {
     <div className='main-container'>
       <Title title={'Login'} />
       <br />
-      <Input onHandleInputChange={handleInputChange} defaultText='Enter your e-mail here' value={userLogin.emailAddress} type={'email'} />
+      <Input onHandleInputChange={handleInputChange} defaultText='Enter your e-mail here' value={userLogin.email} name='email' type={'email'} />
       <br />
-      <Input onHandleInputChange={handleInputChange} defaultText='Enter your password here' value={userLogin.password} type='password' />
+      <Input onHandleInputChange={handleInputChange} defaultText='Enter your password here' value={userLogin.password} name='password' type='password' />
       <br />
-      <Button onHandleButtonClick={handleButtonClick} />
+      <Button onHandleButtonClick={handleLogin} />
     </div>
   )
 }

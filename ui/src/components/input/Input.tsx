@@ -7,15 +7,16 @@ interface IInputProps {
     onHandleInputChange: (event: ChangeEvent<HTMLInputElement>) => void;
     value: string;
     type: string;
+    name: string;
 }
 
 const Input = (props: IInputProps): JSX.Element => {
-    const { defaultText, onHandleInputChange, value, type = 'text' } = props;
+    const { defaultText, onHandleInputChange, value, name, type = 'text' } = props;
 
     return (
         <div className='input-container'>
             <input
-                name='emailAddress'
+                name={name}
                 value={value}
                 placeholder={defaultText}
                 onChange={onHandleInputChange}
