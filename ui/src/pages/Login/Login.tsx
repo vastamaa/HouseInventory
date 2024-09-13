@@ -4,6 +4,7 @@ import Input from '../../components/input/Input';
 import Title from '../../components/title/Title';
 import Button from '../../components/button/Button';
 import { useHttpRequestService } from '../../contexts/HttpRequestServiceContext';
+import UriBuilder from '../../utils/UriBuilder';
 
 interface IUserLogin {
   email: string;
@@ -17,8 +18,10 @@ const Login = (): JSX.Element => {
 
   const handleLogin = async (event: MouseEvent<HTMLInputElement>) => {
     event.preventDefault();
+
+    const loginUri = UriBuilder.use().Login().Build();
     try {
-      const response = await httpRequestService.PostResourceAsync<IUserLogin>('/api/Authentication/LoginUser', userLogin);
+      const response = await httpRequestService.PostResourceAsync<IUserLogin>(loginUri, userLogin);
       console.log('Response value:', response);
     }
     catch (error) {
