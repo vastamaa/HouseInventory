@@ -1,10 +1,11 @@
 import './App.css';
 import React from 'react';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Home from './pages/Home/Home';
-import Login from './pages/Login/Login';
+import Home from './pages/home/Home';
+import Login from './pages/login/Login';
 import { HttpRequestServiceProvider } from './contexts/HttpRequestServiceContext';
 import HttpRequestService from './services/HttpRequestService';
+import Register from './pages/register/Register';
 
 const App = () => {
   return (
@@ -13,6 +14,7 @@ const App = () => {
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/login' element={<Login />} />
+          <Route path='/register' element={<Register />} />
         </Routes>
       </BrowserRouter>
     </HttpRequestServiceProvider>

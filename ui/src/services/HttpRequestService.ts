@@ -49,10 +49,8 @@ class HttpRequestService implements IHttpRequestService {
             options.body = JSON.stringify(data); // If data is provided, add it to the body
         }
 
-        const url =`${API_URL}${endpoint}`;
-
         try {
-            const response = await fetch(url, options);
+            const response = await fetch(endpoint, options);
 
             if (!response.ok) {
                 const errorResponse = await response.json();
