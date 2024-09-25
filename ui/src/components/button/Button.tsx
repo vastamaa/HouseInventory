@@ -1,15 +1,18 @@
 import React, { MouseEvent } from 'react'
 
-interface IButtonProps {
+import './Button.css';
+
+export interface IButtonProps {
+    value: string;
     onHandleButtonClick: (event: MouseEvent<HTMLInputElement>) => void;
 }
 
 const Button = (props: IButtonProps): JSX.Element => {
-    const { onHandleButtonClick } = props;
+    const { value, onHandleButtonClick } = props;
 
     return (
         <div className='input-container'>
-            <input className='input-button' type="button" onClick={onHandleButtonClick} value={'Log in'} />
+            <input className='input-button' type='submit' onClick={onHandleButtonClick} value={value} />
         </div>
     )
 }

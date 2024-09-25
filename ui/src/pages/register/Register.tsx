@@ -2,17 +2,8 @@ import React, { ChangeEvent, MouseEvent, useState } from 'react'
 import { useHttpRequestService } from '../../contexts/HttpRequestServiceContext';
 import UriBuilder from '../../utils/UriBuilder';
 import Title from '../../components/title/Title';
-import Input from '../../components/input/Input';
-import Button from '../../components/button/Button';
-
-interface IUserRegister {
-    firstName?: string | null;
-    lastName?: string | null;
-    phoneNumber?: string | null;
-    userName: string;
-    email: string;
-    password: string;
-}
+import { getRegisterConfig, IUserRegister } from '../../configs/form-config';
+import InputForm from '../../components/input-form/InputForm';
 
 const Register = (): JSX.Element => {
     const [userRegister, setUserRegister] = useState<IUserRegister>({ userName: '', email: '', password: '' });
@@ -44,19 +35,7 @@ const Register = (): JSX.Element => {
         <div className='main-container'>
             <Title title={'Register'} />
             <br />
-            <Input onHandleInputChange={handleInputChange} defaultText='Enter your first name here' value={userRegister.firstName} name='firstName' type={'text'} />
-            <br />
-            <Input onHandleInputChange={handleInputChange} defaultText='Enter your last name here' value={userRegister.lastName} name='lastName' type={'text'} />
-            <br />
-            <Input onHandleInputChange={handleInputChange} defaultText='Enter your phone number here' value={userRegister.phoneNumber} name='phoneNumber' type={'text'} />
-            <br />
-            <Input onHandleInputChange={handleInputChange} defaultText='Enter your username here' value={userRegister.userName} name='userName' type={'text'} />
-            <br />
-            <Input onHandleInputChange={handleInputChange} defaultText='Enter your e-mail here' value={userRegister.email} name='email' type={'email'} />
-            <br />
-            <Input onHandleInputChange={handleInputChange} defaultText='Enter your password here' value={userRegister.password} name='password' type='password' />
-            <br />
-            <Button onHandleButtonClick={handleRegister} />
+            <InputForm configurations={getRegisterConfig({ onChange: handleInputChange, onClick: handleRegister, formDetails: userRegister })} />
         </div>
     )
 }
