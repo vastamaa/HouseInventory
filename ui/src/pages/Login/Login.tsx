@@ -1,22 +1,17 @@
 import React, { ChangeEvent, MouseEvent, useState } from 'react'
 import './Login.css'
-import Input from '../../components/input/Input';
 import Title from '../../components/title/Title';
-import Button from '../../components/button/Button';
 import { useHttpRequestService } from '../../contexts/HttpRequestServiceContext';
 import UriBuilder from '../../utils/UriBuilder';
-
-interface IUserLogin {
-  email: string;
-  password: string;
-  rememberMe?: boolean | null;
-}
+import { getLoginConfig, IUserLogin } from '../../configs/form-config';
+import InputForm from '../../components/input-form/InputForm';
+import { IHttpRequestService } from '../../services/interfaces/IHttpRequestService';
 
 const Login = (): JSX.Element => {
   const [userLogin, setUserLogin] = useState<IUserLogin>({ email: '', password: '' });
-  const httpRequestService = useHttpRequestService();
+  const httpRequestService: IHttpRequestService = useHttpRequestService();
 
-  const handleLogin = async (event: MouseEvent<HTMLInputElement>) => {
+  const handleLogin = async (event: MouseEvent<HTMLInputElement>): Promise<void> => {
     event.preventDefault();
 
     const loginUri = UriBuilder.use().Login().Build();
@@ -42,11 +37,7 @@ const Login = (): JSX.Element => {
     <div className='main-container'>
       <Title title={'Login'} />
       <br />
-      <Input onHandleInputChange={handleInputChange} defaultText='Enter your e-mail here' value={userLogin.email} name='email' type={'email'} />
-      <br />
-      <Input onHandleInputChange={handleInputChange} defaultText='Enter your password here' value={userLogin.password} name='password' type='password' />
-      <br />
-      <Button onHandleButtonClick={handleLogin} />
+      <InputForm configurations={getLoginConfig({ onChange: handleInputChange, onClick: handleLogin, formDetails: userLogin })} />
     </div>
   )
 }
