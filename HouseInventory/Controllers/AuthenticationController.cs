@@ -2,11 +2,13 @@
 using HouseInventory.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics.CodeAnalysis;
 
 namespace HouseInventory.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [ExcludeFromCodeCoverage]
     public class AuthenticationController : ControllerBase
     {
         private readonly IAuthenticationService _authenticationService;
