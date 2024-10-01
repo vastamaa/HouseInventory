@@ -1,4 +1,3 @@
-import { API_URL } from "../constants";
 import { IHttpRequestService } from "./interfaces/IHttpRequestService";
 
 interface IRequestOptions {
