@@ -31,6 +31,7 @@ namespace HouseInventory
             builder.Services.ConfigureIISIntegration();
 
             builder.Services.ConfigureLoggerService();
+            builder.Services.ConfigureJWTAuthentication(configuration);
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

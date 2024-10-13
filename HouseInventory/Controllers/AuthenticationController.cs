@@ -42,9 +42,12 @@ namespace HouseInventory.Controllers
         [HttpPost(nameof(LoginUser))]
         public async Task<IActionResult> LoginUser([FromBody] UserLoginDto userForLogin)
         {
-            var result = await _authenticationService.LoginUserAsync(userForLogin);
+            if (!await _authenticationService.ValidateUserAsync(userForLogin))
+            {
+                return Unauthorized();
+            }
 
-            return result.Succeeded ? Ok("Logged in!") : BadRequest(ModelState);
+            return Ok(new { Token = await _authenticationService.CreateTokenAsync() });
         }
 
         [HttpPost(nameof(LogoutUser))]

@@ -2,9 +2,12 @@
 using HouseInventory.Data.Entities;
 using HouseInventory.Services;
 using HouseInventory.Services.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using System.Diagnostics.CodeAnalysis;
+using System.Text;
 
 namespace HouseInventory.Extensions
 {
@@ -39,7 +42,7 @@ namespace HouseInventory.Extensions
             services.AddScoped<Services.Interfaces.IAuthenticationService, Services.AuthenticationService>();
         }
 
-        public static void AddCorsConfiguration(this IServiceCollection services) 
+        public static void AddCorsConfiguration(this IServiceCollection services)
         {
             services.AddCors(options =>
             {
@@ -64,6 +67,37 @@ namespace HouseInventory.Extensions
         public static void ConfigureLoggerService(this IServiceCollection services)
         {
             services.AddSingleton<ILoggerManager, LoggerManager>();
+        }
+
+        public static void ConfigureJWTAuthentication(this IServiceCollection services, IConfiguration configuration)
+        {
+            var jwtSettings = configuration.GetSection("Authentication");
+
+            services.AddAuthentication(configuration =>
+            {
+                configuration.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                configuration.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                configuration.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(config =>
+            {
+                config.RequireHttpsMetadata = false;
+                config.SaveToken = false;
+                config.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+
+                    ValidIssuer = jwtSettings["validIssuer"],
+                    ValidAudience = jwtSettings["validAudience"],
+
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(jwtSettings["JWT_Secret"])
+                        ),
+                };
+            });
         }
     }
 }
