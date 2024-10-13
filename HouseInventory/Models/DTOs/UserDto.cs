@@ -21,11 +21,11 @@ namespace HouseInventory.Models.DTOs
     [ExcludeFromCodeCoverage]
     public class UserLoginDto
     {
-        [Required]
+        [Required(ErrorMessage = "Email is requried!")]
         [EmailAddress]
         public string Email { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Password is requried!")]
         [DataType(DataType.Password)]
         public string Password { get; set; }
 
