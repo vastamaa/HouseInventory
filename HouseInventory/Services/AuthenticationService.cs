@@ -1,11 +1,13 @@
 ﻿using AutoMapper;
 using HouseInventory.Data.Entities;
+using HouseInventory.Data.Entities.Exceptions;
 using HouseInventory.Models.DTOs;
 using HouseInventory.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace HouseInventory.Services
@@ -56,19 +58,32 @@ namespace HouseInventory.Services
 
             if (!result)
             {
-                _logger.LogWarn($"{nameof(ValidateUserAsync)}: Authentication failed. Wrong user name or password."); 
+                _logger.LogWarn($"{nameof(ValidateUserAsync)}: Authentication failed. Wrong user name or password.");
             }
-            
+
             return result;
         }
 
-        public async Task<string> CreateTokenAsync()
+        public async Task<TokenDto> CreateTokenAsync(bool populateExpiration)
         {
             var signingCredentials = GetSigningCredentials();
             var claims = await GetClaims();
             var tokenOptions = GenerateTokenOptions(signingCredentials, claims);
 
-            return new JwtSecurityTokenHandler().WriteToken(tokenOptions);
+            var refreshToken = GenerateRefreshToken();
+
+            _user.RefreshToken = refreshToken;
+
+            if (populateExpiration)
+            {
+                _user.RefreshTokenExpiryTime = DateTime.Now.AddDays(7);
+            }
+
+            await _userManager.UpdateAsync(_user);
+
+            var accessToken = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
+
+            return new TokenDto(accessToken, refreshToken);
         }
 
         private SigningCredentials GetSigningCredentials()
@@ -102,7 +117,7 @@ namespace HouseInventory.Services
         {
             var jwtSettings = _configuration.GetSection("JwtSettings");
 
-            var tokenOptions = new JwtSecurityToken
+            return new JwtSecurityToken
             (
                 issuer: jwtSettings["validIssuer"],
                 audience: jwtSettings["validAudience"],
@@ -110,8 +125,59 @@ namespace HouseInventory.Services
                 expires: DateTime.Now.AddMinutes(Convert.ToDouble(jwtSettings["expires"])),
                 signingCredentials: signingCredentials
             );
+        }
 
-            return tokenOptions;
+        private string GenerateRefreshToken()
+        {
+            var randomNumber = new byte[32];
+            using (var randNumGen = RandomNumberGenerator.Create())
+            {
+                randNumGen.GetBytes(randomNumber);
+                return Convert.ToBase64String(randomNumber);
+            }
+        }
+
+        private ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
+        {
+            var jwtSettings = _configuration.GetSection("Authentication");
+
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateAudience = true,
+                ValidateIssuer = true,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["JWT_Secret"])),
+                ValidateLifetime = true,
+                ValidIssuer = jwtSettings["validIssuer"],
+                ValidAudience = jwtSettings["validAudience"]
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            SecurityToken securityToken;
+            var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out securityToken);
+
+            var jwtSecurityToken = securityToken as JwtSecurityToken;
+
+            if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+            {
+                throw new SecurityTokenException("Invalid token");
+            }
+
+            return principal;
+        }
+
+        public async Task<TokenDto> RefreshTokenAsync(TokenDto tokenDto)
+        {
+            var principal = GetPrincipalFromExpiredToken(tokenDto.AccessToken);
+            var user = await _userManager.FindByNameAsync(principal.Identity.Name);
+
+            if (user == null || user.RefreshToken != tokenDto.RefreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
+            {
+                throw new RefreshTokenBadRequest();
+            }
+            _user = user;
+            
+            return await CreateTokenAsync(populateExpiration: false);
         }
     }
 }

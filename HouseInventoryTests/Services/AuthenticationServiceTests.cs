@@ -4,7 +4,9 @@ using FluentAssertions.Execution;
 using HouseInventory.Data.Entities;
 using HouseInventory.Models.DTOs;
 using HouseInventory.Services;
+using HouseInventory.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
@@ -19,13 +21,17 @@ namespace HouseInventoryTests.Services
         private readonly Mock<IMapper> _mapperMock;
         private readonly Mock<UserManager<User>> _userManagerMock;
         private readonly Mock<SignInManager<User>> _signInManagerMock;
+        private readonly Mock<IConfiguration> _configurationMock;
+        private readonly Mock<ILoggerManager> _logger;
 
         public AuthenticationServiceTests()
         {
             _mapperMock = new Mock<IMapper>();
             _userManagerMock = MockUserManager();
             _signInManagerMock = MockSignInManager(_userManagerMock);
-            _authenticationService = new AuthenticationService(_mapperMock.Object, _userManagerMock.Object, _signInManagerMock.Object);
+            _configurationMock = new Mock<IConfiguration>();
+            _logger = new Mock<ILoggerManager>();
+            _authenticationService = new AuthenticationService(_mapperMock.Object, _userManagerMock.Object, _signInManagerMock.Object, _logger.Object, _configurationMock.Object);
         }
 
         public Mock<UserManager<User>> MockUserManager()
@@ -178,12 +184,12 @@ namespace HouseInventoryTests.Services
                 .ReturnsAsync(SignInResult.Success);
 
             // Act
-            var result = await _authenticationService.LoginUserAsync(userLoginDto);
+            var result = await _authenticationService.ValidateUserAsync(userLoginDto);
 
             // Assert
             using (new AssertionScope())
             {
-                result.Succeeded.Should().BeTrue();
+                result.Should().BeTrue();
                 _userManagerMock.VerifyAll();
                 _signInManagerMock.VerifyAll();
             }
@@ -216,12 +222,12 @@ namespace HouseInventoryTests.Services
                 .ReturnsAsync(SignInResult.Failed);
 
             // Act
-            var result = await _authenticationService.LoginUserAsync(userLoginDto);
+            var result = await _authenticationService.ValidateUserAsync(userLoginDto);
 
             // Assert
             using (new AssertionScope())
             {
-                result.Succeeded.Should().BeFalse();
+                result.Should().BeFalse();
                 _userManagerMock.VerifyAll();
                 _signInManagerMock.VerifyAll();
             }
@@ -243,7 +249,7 @@ namespace HouseInventoryTests.Services
                 .ReturnsAsync((User)null);
 
             // Act
-            var result = async () => await _authenticationService.LoginUserAsync(userLoginDto);
+            var result = async () => await _authenticationService.ValidateUserAsync(userLoginDto);
 
             // Assert
             using (new AssertionScope())

@@ -26,6 +26,7 @@ namespace HouseInventory
             builder.Services.AddDatabaseConnection(configuration);
             builder.Services.AddAutoMapper(typeof(Program));
             builder.Services.AddCustomServices();
+            builder.Services.AddCustomActionFilters();
 
             builder.Services.AddCorsConfiguration();
             builder.Services.ConfigureIISIntegration();

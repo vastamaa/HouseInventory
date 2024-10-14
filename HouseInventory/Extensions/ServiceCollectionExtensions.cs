@@ -1,4 +1,5 @@
-﻿using HouseInventory.Data.Context;
+﻿using HouseInventory.ActionFilters;
+using HouseInventory.Data.Context;
 using HouseInventory.Data.Entities;
 using HouseInventory.Services;
 using HouseInventory.Services.Interfaces;
@@ -67,6 +68,11 @@ namespace HouseInventory.Extensions
         public static void ConfigureLoggerService(this IServiceCollection services)
         {
             services.AddSingleton<ILoggerManager, LoggerManager>();
+        }
+
+        public static void AddCustomActionFilters(this IServiceCollection services)
+        {
+            services.AddScoped<ValidationFilterAttribute>();
         }
 
         public static void ConfigureJWTAuthentication(this IServiceCollection services, IConfiguration configuration)

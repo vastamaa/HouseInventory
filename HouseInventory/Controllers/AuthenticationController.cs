@@ -1,4 +1,5 @@
-﻿using HouseInventory.Models.DTOs;
+﻿using HouseInventory.ActionFilters;
+using HouseInventory.Models.DTOs;
 using HouseInventory.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -21,6 +22,7 @@ namespace HouseInventory.Controllers
         }
 
         [HttpPost(nameof(RegisterUser))]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]  
         public async Task<IActionResult> RegisterUser([FromBody] UserRegistrationDto userForRegistration)
         {
             var result = await _authenticationService.RegisterUserAsync(userForRegistration);
@@ -47,7 +49,9 @@ namespace HouseInventory.Controllers
                 return Unauthorized();
             }
 
-            return Ok(new { Token = await _authenticationService.CreateTokenAsync() });
+            var tokenDto = await _authenticationService.CreateTokenAsync(populateExpiration: true)
+
+            return Ok(tokenDto);
         }
 
         [HttpPost(nameof(LogoutUser))]
