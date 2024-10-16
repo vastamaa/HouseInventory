@@ -2,11 +2,13 @@
 using HouseInventory.Models.DTOs;
 using HouseInventory.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics.CodeAnalysis;
 
 namespace HouseInventory.Controllers
 {
     [Route("api/token")]
     [ApiController]
+    [ExcludeFromCodeCoverage]
     public class TokenController : ControllerBase
     {
         private readonly IAuthenticationService _authenticationService;

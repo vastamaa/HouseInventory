@@ -120,7 +120,7 @@ namespace HouseInventory.Services
         [ExcludeFromCodeCoverage]
         private JwtSecurityToken GenerateTokenOptions(SigningCredentials signingCredentials, List<Claim> claims)
         {
-            var jwtSettings = _configuration.GetSection("JwtSettings");
+            var jwtSettings = _configuration.GetSection("Authentication");
 
             return new JwtSecurityToken
             (

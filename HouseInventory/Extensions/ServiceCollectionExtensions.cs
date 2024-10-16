@@ -83,12 +83,10 @@ namespace HouseInventory.Extensions
             {
                 configuration.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 configuration.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                configuration.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
             })
             .AddJwtBearer(config =>
             {
                 config.RequireHttpsMetadata = false;
-                config.SaveToken = false;
                 config.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
