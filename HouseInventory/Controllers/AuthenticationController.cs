@@ -49,7 +49,7 @@ namespace HouseInventory.Controllers
                 return Unauthorized();
             }
 
-            var tokenDto = await _authenticationService.CreateTokenAsync(populateExpiration: true)
+            var tokenDto = await _authenticationService.CreateTokenAsync(populateExpiration: true);
 
             return Ok(tokenDto);
         }

@@ -5,9 +5,9 @@ namespace HouseInventory.ActionFilters
 {
     public class ValidationFilterAttribute : IActionFilter
     {
-        public void OnActionExecuted(ActionExecutedContext context)
+        public void OnActionExecuted(ActionExecutedContext context) 
         {
-            throw new NotImplementedException();
+            // Runs in the end. Not needed for now. Removed NotImplemented exception, as it'd throw it all the time.
         }
 
         public void OnActionExecuting(ActionExecutingContext context)

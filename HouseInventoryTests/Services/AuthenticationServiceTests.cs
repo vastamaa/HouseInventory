@@ -74,6 +74,8 @@ namespace HouseInventoryTests.Services
             );
         }
 
+        #region Register tests
+
         [Fact]
         public async Task RegisterUserAsync_Should_Return_SucceededResult()
         {
@@ -157,21 +159,25 @@ namespace HouseInventoryTests.Services
 
         }
 
+        #endregion
+
+        #region Login tests
+
         [Fact]
-        public async Task LoginUserAsync_Should_Return_SucceededSignInResult()
+        public async Task ValidateUserAsync_Should_Return_SucceededSignInResult()
         {
             // Arrange
             var userLoginDto = new UserLoginDto
             {
                 Email = "test@example.com",
-                Password = "Password123!",
+                Password = "J7vy6rKdfn!",
                 RememberMe = true
             };
 
             var user = new User
             {
                 UserName = "test@example.com",
-                Email = "test@example.com"
+                Email = "test@example.com",
             };
 
             _userManagerMock
@@ -179,9 +185,10 @@ namespace HouseInventoryTests.Services
                 .ReturnsAsync(user)
                 .Verifiable();
 
-            _signInManagerMock
-                .Setup(m => m.PasswordSignInAsync(user.UserName, userLoginDto.Password, userLoginDto.RememberMe, false))
-                .ReturnsAsync(SignInResult.Success);
+            _userManagerMock
+                .Setup(m => m.CheckPasswordAsync(user, userLoginDto.Password))
+                .ReturnsAsync(true)
+                .Verifiable();
 
             // Act
             var result = await _authenticationService.ValidateUserAsync(userLoginDto);
@@ -191,12 +198,11 @@ namespace HouseInventoryTests.Services
             {
                 result.Should().BeTrue();
                 _userManagerMock.VerifyAll();
-                _signInManagerMock.VerifyAll();
             }
         }
 
         [Fact]
-        public async Task LoginUserAsync_InvalidPassword_Should_Return_FailedSignInResult()
+        public async Task ValidateUserAsync_InvalidPassword_Should_Return_FailedSignInResult()
         {
             // Arrange
             var userLoginDto = new UserLoginDto
@@ -217,9 +223,14 @@ namespace HouseInventoryTests.Services
                 .ReturnsAsync(user)
                 .Verifiable();
 
-            _signInManagerMock
-                .Setup(m => m.PasswordSignInAsync(user.UserName, userLoginDto.Password, userLoginDto.RememberMe, false))
-                .ReturnsAsync(SignInResult.Failed);
+            _userManagerMock
+                .Setup(m => m.CheckPasswordAsync(user, userLoginDto.Password))
+                .ReturnsAsync(false)
+                .Verifiable();
+
+            _logger
+                .Setup(m => m.LogWarn($"{nameof(_authenticationService.ValidateUserAsync)}: Authentication failed. Wrong user name or password."))
+                .Verifiable();
 
             // Act
             var result = await _authenticationService.ValidateUserAsync(userLoginDto);
@@ -229,36 +240,13 @@ namespace HouseInventoryTests.Services
             {
                 result.Should().BeFalse();
                 _userManagerMock.VerifyAll();
-                _signInManagerMock.VerifyAll();
+                _logger.VerifyAll();
             }
         }
 
-        [Fact]
-        public async Task LoginUserAsync_UserNotFound_Return_FailedSignInResult()
-        {
-            // Arrange
-            var userLoginDto = new UserLoginDto
-            {
-                Email = "nonexistent@example.com",
-                Password = "Password123!",
-                RememberMe = false
-            };
+        #endregion
 
-            _userManagerMock
-                .Setup(um => um.FindByEmailAsync(userLoginDto.Email))
-                .ReturnsAsync((User)null);
-
-            // Act
-            var result = async () => await _authenticationService.ValidateUserAsync(userLoginDto);
-
-            // Assert
-            using (new AssertionScope())
-            {
-                await result.Should().ThrowAsync<NullReferenceException>().WithMessage("Object reference not set to an instance of an object.");
-                _userManagerMock.VerifyAll();
-                _signInManagerMock.VerifyAll();
-            }
-        }
+        #region Logout tests
 
         [Fact]
         public async Task LogoutUserAsync_Should_Successfully_Call_LogoutUserAsync()
@@ -278,5 +266,7 @@ namespace HouseInventoryTests.Services
                 _signInManagerMock.VerifyAll();
             }
         }
+
+        #endregion
     }
 }

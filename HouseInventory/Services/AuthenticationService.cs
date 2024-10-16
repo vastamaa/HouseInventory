@@ -5,6 +5,7 @@ using HouseInventory.Models.DTOs;
 using HouseInventory.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
+using System.Diagnostics.CodeAnalysis;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -64,6 +65,7 @@ namespace HouseInventory.Services
             return result;
         }
 
+        [ExcludeFromCodeCoverage]
         public async Task<TokenDto> CreateTokenAsync(bool populateExpiration)
         {
             var signingCredentials = GetSigningCredentials();
@@ -86,6 +88,7 @@ namespace HouseInventory.Services
             return new TokenDto(accessToken, refreshToken);
         }
 
+        [ExcludeFromCodeCoverage]
         private SigningCredentials GetSigningCredentials()
         {
             var jwtSettings = _configuration.GetSection("Authentication");
@@ -96,6 +99,7 @@ namespace HouseInventory.Services
             return new SigningCredentials(secret, SecurityAlgorithms.HmacSha256);
         }
 
+        [ExcludeFromCodeCoverage]
         private async Task<List<Claim>> GetClaims()
         {
             var claims = new List<Claim>
@@ -113,6 +117,7 @@ namespace HouseInventory.Services
             return claims;
         }
 
+        [ExcludeFromCodeCoverage]
         private JwtSecurityToken GenerateTokenOptions(SigningCredentials signingCredentials, List<Claim> claims)
         {
             var jwtSettings = _configuration.GetSection("JwtSettings");
@@ -127,6 +132,7 @@ namespace HouseInventory.Services
             );
         }
 
+        [ExcludeFromCodeCoverage]
         private string GenerateRefreshToken()
         {
             var randomNumber = new byte[32];
@@ -137,6 +143,7 @@ namespace HouseInventory.Services
             }
         }
 
+        [ExcludeFromCodeCoverage]
         private ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
         {
             var jwtSettings = _configuration.GetSection("Authentication");
@@ -166,6 +173,7 @@ namespace HouseInventory.Services
             return principal;
         }
 
+        [ExcludeFromCodeCoverage]
         public async Task<TokenDto> RefreshTokenAsync(TokenDto tokenDto)
         {
             var principal = GetPrincipalFromExpiredToken(tokenDto.AccessToken);
@@ -173,7 +181,7 @@ namespace HouseInventory.Services
 
             if (user == null || user.RefreshToken != tokenDto.RefreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
             {
-                throw new RefreshTokenBadRequest();
+                throw new RefreshTokenBadRequestException();
             }
             _user = user;
             
