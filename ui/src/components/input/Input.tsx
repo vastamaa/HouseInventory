@@ -3,15 +3,16 @@ import React, { ChangeEvent } from 'react'
 // Our stuff
 import './Input.css'
 
-export interface IInputProps {
+interface IInputProps {
     defaultText: string;
     onHandleInputChange: (event: ChangeEvent<HTMLInputElement>) => void;
     value: string;
+    type: string;
     name: string;
 }
 
 const Input = (props: IInputProps): JSX.Element => {
-    const { defaultText, onHandleInputChange, value, name } = props;
+    const { defaultText, onHandleInputChange, value, name, type = 'text' } = props;
 
     return (
         <div className='input-container'>
@@ -21,6 +22,7 @@ const Input = (props: IInputProps): JSX.Element => {
                 placeholder={defaultText}
                 onChange={onHandleInputChange}
                 className='input-box'
+                type={type}
             />
         </div>
     )
