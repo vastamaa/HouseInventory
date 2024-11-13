@@ -1,18 +1,16 @@
 import React, { ChangeEvent, MouseEvent, useState } from 'react'
-
-// Our stuff
 import './Login.css'
+import Input from '../../components/input/Input';
 import Title from '../../components/title/Title';
 import Button from '../../components/button/Button';
 import { useHttpRequestService } from '../../contexts/HttpRequestServiceContext';
 import UriBuilder from '../../utils/UriBuilder';
-import { getLoginConfig, IUserLogin } from '../../configs/form-config';
-import InputForm from '../../components/input-form/InputForm';
-<<<<<<< HEAD
-import { IHttpRequestService } from '../../services/interfaces/IHttpRequestService';
 import Loader from '../../components/loader/Loader';
-=======
->>>>>>> parent of d48865f (Implemented an easier way to create form inputs. Does not apply the Open/Close principle yet.)
+interface IUserLogin {
+  email: string;
+  password: string;
+  rememberMe?: boolean | null;
+}
 
 const Login = (): JSX.Element => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -50,18 +48,17 @@ const Login = (): JSX.Element => {
       <>
         <Title title={'Login'} />
         <br />
-        <InputForm configurations={getLoginConfig({ onChange: handleInputChange, onClick: handleLogin, formDetails: userLogin })} />
+        <Input onHandleInputChange={handleInputChange} defaultText='Enter your e-mail here' value={userLogin.email} name='email' type={'email'} />
+        <br />
+        <Input onHandleInputChange={handleInputChange} defaultText='Enter your password here' value={userLogin.password} name='password' type='password' />
+        <br />
+        <Button onHandleButtonClick={handleLogin} />
       </>
     );
-
   return (
     <div className='main-container'>
-      <Title title={'Login'} />
-      <br />
-      <InputForm configurations={getLoginConfig({ onChange: handleInputChange, formDetails: userLogin })} />
-      <Button onHandleButtonClick={handleLogin} />
+      {isLoading ? <Loader /> : content}
     </div>
   )
 }
-
 export default Login;
