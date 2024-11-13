@@ -1,21 +1,23 @@
 import React, { ChangeEvent, MouseEvent, useState } from 'react'
-
-// Our stuff
 import './Login.css'
+import Input from '../../components/input/Input';
 import Title from '../../components/title/Title';
+import Button from '../../components/button/Button';
 import { useHttpRequestService } from '../../contexts/HttpRequestServiceContext';
 import UriBuilder from '../../utils/UriBuilder';
-import { getLoginConfig, IUserLogin } from '../../configs/form-config';
-import InputForm from '../../components/input-form/InputForm';
-import { IHttpRequestService } from '../../services/interfaces/IHttpRequestService';
 import Loader from '../../components/loader/Loader';
+interface IUserLogin {
+  email: string;
+  password: string;
+  rememberMe?: boolean | null;
+}
 
 const Login = (): JSX.Element => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [userLogin, setUserLogin] = useState<IUserLogin>({ email: '', password: '' });
-  const httpRequestService: IHttpRequestService = useHttpRequestService();
+  const httpRequestService = useHttpRequestService();
 
-  const handleLogin = async (event: MouseEvent<HTMLInputElement>): Promise<void> => {
+  const handleLogin = async (event: MouseEvent<HTMLInputElement>) => {
     event.preventDefault();
     setIsLoading(true);
 
@@ -46,15 +48,17 @@ const Login = (): JSX.Element => {
       <>
         <Title title={'Login'} />
         <br />
-        <InputForm configurations={getLoginConfig({ onChange: handleInputChange, onClick: handleLogin, formDetails: userLogin })} />
+        <Input onHandleInputChange={handleInputChange} defaultText='Enter your e-mail here' value={userLogin.email} name='email' type={'email'} />
+        <br />
+        <Input onHandleInputChange={handleInputChange} defaultText='Enter your password here' value={userLogin.password} name='password' type='password' />
+        <br />
+        <Button onHandleButtonClick={handleLogin} />
       </>
     );
-
   return (
     <div className='main-container'>
       {isLoading ? <Loader /> : content}
     </div>
   )
 }
-
 export default Login;
