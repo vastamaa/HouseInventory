@@ -40,7 +40,9 @@ namespace HouseInventory.Extensions
 
         public static void AddCustomServices(this IServiceCollection services)
         {
-            services.AddScoped<Services.Interfaces.IAuthenticationService, Services.AuthenticationService>();
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
+            services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IUserService, UserService>();
         }
 
         public static void AddCorsConfiguration(this IServiceCollection services)
