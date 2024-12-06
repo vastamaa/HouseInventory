@@ -10,7 +10,7 @@ using System.Text;
 namespace HouseInventory.Services
 {
     [ExcludeFromCodeCoverage]
-    public class TokenService : ITokenService
+    public sealed class TokenService : ITokenService
     {
         private readonly IConfiguration _configuration;
 

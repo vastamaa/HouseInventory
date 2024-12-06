@@ -1,6 +1,7 @@
 ﻿using HouseInventory.ActionFilters;
 using HouseInventory.Data.Context;
 using HouseInventory.Data.Entities;
+using HouseInventory.Models.DTOs;
 using HouseInventory.Services;
 using HouseInventory.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace HouseInventory.Extensions
@@ -43,6 +45,12 @@ namespace HouseInventory.Extensions
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IGoogleAuthService, GoogleAuthService>();
+        }
+
+        public static void AddCustomOptions(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.Configure<GoogleAuthConfigDto>(configuration.GetSection("Google"));
         }
 
         public static void AddCorsConfiguration(this IServiceCollection services)

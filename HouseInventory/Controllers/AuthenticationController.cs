@@ -1,4 +1,5 @@
 ﻿using HouseInventory.ActionFilters;
+using HouseInventory.Data.Entities;
 using HouseInventory.Models.DTOs;
 using HouseInventory.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
@@ -15,12 +16,14 @@ namespace HouseInventory.Controllers
         private readonly IAuthenticationService _authenticationService;
         private readonly IUserService _userService;
         private readonly ILoggerManager _logger;
+        private readonly IGoogleAuthService _googleAuthService;
 
-        public AuthenticationController(IAuthenticationService authenticationService, ILoggerManager logger, IUserService userService)
+        public AuthenticationController(IAuthenticationService authenticationService, ILoggerManager logger, IUserService userService, IGoogleAuthService googleAuthService)
         {
             _authenticationService = authenticationService;
             _logger = logger;
             _userService = userService;
+            _googleAuthService = googleAuthService;
         }
 
         [HttpPost(nameof(RegisterUser))]
@@ -45,12 +48,23 @@ namespace HouseInventory.Controllers
         [HttpPost(nameof(LoginUser))]
         public async Task<IActionResult> LoginUser([FromBody] UserLoginDto userForLogin)
         {
-            if (!await _authenticationService.ValidateUserAsync(userForLogin))
+            var user = await _authenticationService.ValidateUserAsync(userForLogin);
+
+            if (user is null)
             {
                 return Unauthorized();
             }
 
-            var tokenDto = await _authenticationService.CreateTokenAsync(populateExpiration: true);
+            var tokenDto = await _authenticationService.CreateTokenAsync(user, populateExpiration: true);
+            return Ok(tokenDto);
+        }
+
+        [HttpPost(nameof(GoogleSignIn))]
+        public async Task<IActionResult> GoogleSignIn([FromBody] GoogleSignInVMDto googleSignInVMDto)
+        {
+            var user = await _googleAuthService.GoogleSignInAsync(googleSignInVMDto);
+
+            var tokenDto = await _authenticationService.CreateTokenAsync(user, populateExpiration: true);
             return Ok(tokenDto);
         }
 

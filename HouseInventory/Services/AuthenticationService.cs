@@ -15,8 +15,6 @@ namespace HouseInventory.Services
         private readonly SignInManager<User> _signInManager;
         private readonly ILoggerManager _logger;
 
-        private User _user;
-
         public AuthenticationService(SignInManager<User> signInManager, ILoggerManager logger, ITokenService tokenService, IUserService userService)
         {
             _signInManager = signInManager;
@@ -31,31 +29,38 @@ namespace HouseInventory.Services
             await _signInManager.SignOutAsync();
         }
 
-        public async Task<bool> ValidateUserAsync(UserLoginDto user)
+        public async Task<User> ValidateUserAsync(UserLoginDto loginUser)
         {
-            var isUserValid = await _userService.ValidateUserCredentialsAsync(user);
+            var isValidUser = await _userService.ValidateUserCredentialsAsync(loginUser);
 
-            if (!isUserValid)
+            if (!isValidUser)
             {
                 _logger.LogWarn($"{nameof(ValidateUserAsync)}: Authentication failed. Wrong user name or password.");
             }
 
-            return isUserValid;
+            var user = await _userService.FindUserByEmailAsync(loginUser.Email);
+
+            if (user is null)
+            {
+                _logger.LogWarn($"{nameof(ValidateUserAsync)}: User not found after validation.");
+            }
+
+            return user;
         }
 
-        public async Task<TokenDto> CreateTokenAsync(bool populateExpiration)
+        public async Task<TokenDto> CreateTokenAsync(User user, bool populateExpiration)
         {
-            var roles = await _userService.GetUserRolesAsync(_user);
-            var accessToken = _tokenService.GenerateAccessToken(_user, roles);
+            var roles = await _userService.GetUserRolesAsync(user);
+            var accessToken = _tokenService.GenerateAccessToken(user, roles);
             var refreshToken = _tokenService.GenerateRefreshToken();
 
             if (populateExpiration)
             {
-                _user.RefreshTokenExpiryTime = DateTime.Now.AddDays(7);
+                user.RefreshTokenExpiryTime = DateTime.Now.AddDays(7);
             }
 
-            _user.RefreshToken = refreshToken;
-            await _userService.UpdateUserAsync(_user);
+            user.RefreshToken = refreshToken;
+            await _userService.UpdateUserAsync(user);
 
             return new TokenDto(accessToken, refreshToken);
         }
@@ -70,9 +75,8 @@ namespace HouseInventory.Services
             {
                 throw new RefreshTokenBadRequestException();
             }
-            _user = user;
             
-            return await CreateTokenAsync(populateExpiration: false);
+            return await CreateTokenAsync(user, populateExpiration: false);
         }
     }
 }
