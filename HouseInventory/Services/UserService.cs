@@ -7,7 +7,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace HouseInventory.Services
 {
-    public class UserService : IUserService
+    public sealed class UserService : IUserService
     {
         private readonly UserManager<User> _userManager;
         private readonly IMapper _mapper;

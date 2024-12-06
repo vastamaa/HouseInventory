@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace HouseInventory.Models
+﻿namespace HouseInventory.Models
 {
     public enum Roles
     {

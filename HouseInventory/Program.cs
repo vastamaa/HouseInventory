@@ -7,7 +7,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace HouseInventory
 {
     [ExcludeFromCodeCoverage]
-    public class Program
+    public static class Program
     {
         public static void Main(string[] args)
         {
@@ -27,6 +27,7 @@ namespace HouseInventory
             builder.Services.AddAutoMapper(typeof(Program));
             builder.Services.AddCustomServices();
             builder.Services.AddCustomActionFilters();
+            builder.Services.AddCustomOptions(configuration);
 
             builder.Services.AddCorsConfiguration();
             builder.Services.ConfigureIISIntegration();
