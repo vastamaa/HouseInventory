@@ -24,7 +24,7 @@ namespace HouseInventoryTests.Services
             _mapperMock = new Mock<IMapper>();
             _userManagerMock = MockUserManager();
 
-            _userService = new UserService(_userManagerMock.Object, _mapperMock.Object);    
+            _userService = new UserService(_userManagerMock.Object, _mapperMock.Object);
         }
 
         #region Helper Methods

@@ -4,9 +4,11 @@ using HouseInventory.Models;
 using HouseInventory.Models.DTOs;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.OpenApi.Extensions;
+using System.Diagnostics.CodeAnalysis;
 
 namespace HouseInventory.Extensions
 {
+    [ExcludeFromCodeCoverage]
     public static class UserManagerExtensions
     {
         public static async Task<User?> CreateUserFromSocialLogin(this UserManager<User> userManager, ApplicationDbContext context, UserFromSocialLogin socialUser, LoginProvider loginProvider)

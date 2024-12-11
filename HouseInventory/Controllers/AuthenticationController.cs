@@ -1,5 +1,4 @@
 ﻿using HouseInventory.ActionFilters;
-using HouseInventory.Data.Entities;
 using HouseInventory.Models.DTOs;
 using HouseInventory.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
@@ -27,7 +26,7 @@ namespace HouseInventory.Controllers
         }
 
         [HttpPost(nameof(RegisterUser))]
-        [ServiceFilter(typeof(ValidationFilterAttribute))]  
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> RegisterUser([FromBody] UserRegistrationDto userForRegistration)
         {
             var result = await _userService.RegisterUserAsync(userForRegistration);

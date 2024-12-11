@@ -7,5 +7,5 @@ namespace HouseInventory.Models.DTOs
     {
         public string ClientId { get; init; }
         public string ClientSecret { get; init; }
-    } 
+    }
 }

@@ -6,10 +6,12 @@ using HouseInventory.Models.DTOs;
 using HouseInventory.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
+using System.Diagnostics.CodeAnalysis;
 using static Google.Apis.Auth.GoogleJsonWebSignature;
 
 namespace HouseInventory.Services
 {
+    [ExcludeFromCodeCoverage]
     public sealed class GoogleAuthService : IGoogleAuthService
     {
         private readonly ApplicationDbContext _context;
@@ -31,10 +33,10 @@ namespace HouseInventory.Services
 
             try
             {
-               payload = await ValidateAsync(googleSignInDto.IdToken, new ValidationSettings
-               {
-                  Audience = new[] { _googleAuthConfig.ClientId }
-               });
+                payload = await ValidateAsync(googleSignInDto.IdToken, new ValidationSettings
+                {
+                    Audience = new[] { _googleAuthConfig.ClientId }
+                });
             }
             catch (Exception ex)
             {
