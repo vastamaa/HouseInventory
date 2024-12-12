@@ -50,7 +50,7 @@ namespace HouseInventory
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-            else 
+            else
             {
                 app.UseHsts();
             }

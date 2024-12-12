@@ -12,7 +12,7 @@ namespace HouseInventory.Controllers
     public class TokenController : ControllerBase
     {
         private readonly IAuthenticationService _authenticationService;
-        public TokenController(IAuthenticationService authenticationService) 
+        public TokenController(IAuthenticationService authenticationService)
         {
             _authenticationService = authenticationService;
         }

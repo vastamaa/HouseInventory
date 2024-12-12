@@ -75,7 +75,7 @@ namespace HouseInventory.Services
             {
                 throw new RefreshTokenBadRequestException();
             }
-            
+
             return await CreateTokenAsync(user, populateExpiration: false);
         }
     }

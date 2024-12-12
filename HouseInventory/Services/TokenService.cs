@@ -18,7 +18,7 @@ namespace HouseInventory.Services
         {
             _configuration = configuration;
         }
-        
+
 
         public string GenerateAccessToken(User user, IList<string> roles)
         {

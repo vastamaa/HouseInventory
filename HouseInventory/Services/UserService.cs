@@ -18,6 +18,12 @@ namespace HouseInventory.Services
             _mapper = mapper;
         }
 
+        /// <summary>
+        ///  Creates the specified user in the backing store with given password, and role, if the creation was successful, as an asynchronous operation.
+        /// </summary>
+        /// <param name="userRegistrationDto">User object that stores registration information.</param>
+        /// <returns>The <see cref="Task"/> that represents the asynchronous operation, containing the <see cref="IdentityResult"/>
+        /// of the operation.</returns>
         public async Task<IdentityResult> RegisterUserAsync(UserRegistrationDto userRegistrationDto)
         {
             var user = _mapper.Map<User>(userRegistrationDto);
@@ -31,6 +37,13 @@ namespace HouseInventory.Services
             return result;
         }
 
+        /// <summary>
+        /// Returns a flag indicating whether the user exists in the system, and the given password is valid for the specified user.
+        /// </summary>
+        /// <param name="userLoginDto">User object that stores login information.</param>
+        /// <returns>The <see cref="Task"/> that represents the asynchronous operation, containing true if the user,
+        /// specified within <paramref name="userLoginDto" /> is in the database and its values match up,
+        /// otherwise false.</returns>
         public async Task<bool> ValidateUserCredentialsAsync(UserLoginDto userLoginDto)
         {
             var user = await FindUserByEmailAsync(userLoginDto.Email);

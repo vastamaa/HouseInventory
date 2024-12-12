@@ -9,6 +9,7 @@ namespace HouseInventory.Data.Context
     [ExcludeFromCodeCoverage]
     public class ApplicationDbContext : IdentityDbContext<User>
     {
+        public ApplicationDbContext() { }
         public ApplicationDbContext(DbContextOptions options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder builder)
